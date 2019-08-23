@@ -8,6 +8,11 @@ from tests.rawls import add_update_attribute
 
 
 @pytest.mark.asyncio
+async def test_translate_none():
+    assert await translate(None) is None
+
+
+@pytest.mark.asyncio
 async def test_translate_nothing():
     schema = make_pfb_schema()
     file = make_avro_file(schema)

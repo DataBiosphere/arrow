@@ -17,6 +17,9 @@ class Translator:
         self.options = {**defaults, **options}
 
     def translate(self, reader):
+        if reader is None:
+            return None
+
         enums = _list_enums(reader.writer_schema)
         results = []
         for record in reader:
