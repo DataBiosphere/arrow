@@ -22,7 +22,6 @@ class Translator:
         for record in reader:
             if record['name'] != 'metadata':
                 results.append(self._translate_record(record, enums))
-        print(len(results))
         return results
 
     def _translate_record(self, record, enums):
