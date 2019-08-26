@@ -21,25 +21,23 @@ class Translator:
             return None
 
         enums = _list_enums(reader.writer_schema)
-        results = []
-        for record in reader:
-            if record['name'] != 'metadata':
-                results.append(self._translate_record(record, enums))
+        results = [self._translate_record(record, enums)
+                   for record in reader if record['name'] != 'metadata']
         return results
 
     def _translate_record(self, record, enums):
         entity_type = record['name']
         name = record['id']
-        operations = []
-        for key in record['object']:
-            value = record['object'][key]
-            if value is not None:
-                if self.options['b64-decode-enums'] and (entity_type, key) in enums:
-                    value = _b64_decode(value).decode("utf-8")
-                if self.options['prefix-object-ids'] and key == 'object_id':
-                    value = 'drs://' + value
 
-                operations.append(_make_add_update_op(key, value))
+        def make_op(key, value):
+            if self.options['b64-decode-enums'] and (entity_type, key) in enums:
+                value = _b64_decode(value).decode("utf-8")
+            if self.options['prefix-object-ids'] and key == 'object_id':
+                value = 'drs://' + value
+            return _make_add_update_op(key, value)
+
+        operations = [make_op(key, value)
+                      for key, value in record['object'].items() if value is not None]
         return {
             'name': name,
             'entityType': entity_type,
