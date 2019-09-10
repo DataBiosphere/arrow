@@ -1,9 +1,11 @@
 import fastavro
 import urllib.request
 from sanic import response, Sanic
+from sanic_compress import Compress
 from arrow.translate import translate
 
 app = Sanic('arrow')
+Compress(app)
 
 
 @app.get('/_ah/warmup')

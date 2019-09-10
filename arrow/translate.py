@@ -52,10 +52,10 @@ def _b64_decode(encoded_value):
 def _list_enums(schema):
     object_field = next(f for f in schema['fields'] if f['name'] == 'object')
     types = [t for t in object_field['type'] if t['name'] != 'Metadata']
-    enums = [(entity_type['name'], field['name'])
+    enums = {(entity_type['name'], field['name'])
              for entity_type in types
              for field in entity_type['fields']
-             for enum in field['type'] if isinstance(enum, dict) and enum['type'] == 'enum']
+             for enum in field['type'] if isinstance(enum, dict) and enum['type'] == 'enum'}
     return enums
 
 
