@@ -22,7 +22,7 @@ class Translator:
 
         enums = _list_enums(reader.writer_schema)
         results = [self._translate_record(record, enums)
-                   for record in reader if record['name'] != 'metadata']
+                   for record in reader if record['name'] != 'Metadata']
         return results
 
     def _translate_record(self, record, enums):

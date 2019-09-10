@@ -24,7 +24,7 @@ async def test_translate_nothing():
 async def test_ignore_metadata():
     schema = make_pfb_schema()
     file = make_avro_file(schema, [
-        {'name': 'metadata', 'object': {}}
+        {'name': 'Metadata', 'object': {}}
     ])
 
     result = await translate(fastavro.reader(file))
