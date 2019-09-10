@@ -36,12 +36,16 @@ class Translator:
                 value = 'drs://' + value
             return _make_add_update_op(key, value)
 
-        operations = [make_op(key, value)
+        attributes = [make_op(key, value)
                       for key, value in record['object'].items() if value is not None]
+        relations = [make_op(r['dst_name'],
+                             {'entityType': r['dst_name'], 'entityName': r['dst_id']})
+                     for r in record['relations']]
+
         return {
             'name': name,
             'entityType': entity_type,
-            'operations': operations
+            'operations': [*attributes, *relations]
         }
 
 

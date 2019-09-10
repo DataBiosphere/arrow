@@ -1,6 +1,5 @@
 import fastavro
 import pytest
-
 from arrow.translate import translate
 from tests.avro import make_avro_file
 from tests.pfb_schema import make_pfb_schema
@@ -170,6 +169,39 @@ async def test_make_file_links():
     ]
 
 
+@pytest.mark.asyncio
+async def test_make_entity_links():
+    schema = make_pfb_schema([person_entity_def, pet_entity_def])
+    file = make_avro_file(schema, [
+        {'name': 'person', 'id': '123', 'object': {'first_name': 'Brian'}},
+        {'name': 'pet', 'id': '456', 'object': {'pet_name': 'Asa'}, 'relations': [
+            {'dst_name': 'person', 'dst_id': '123'}
+        ]}
+    ])
+
+    result = await translate(fastavro.reader(file))
+    assert result == [
+        {
+            'name': '123',
+            'entityType': 'person',
+            'operations': [
+                add_update_attribute('first_name', 'Brian')
+            ]
+        },
+        {
+            'name': '456',
+            'entityType': 'pet',
+            'operations': [
+                add_update_attribute('pet_name', 'Asa'),
+                add_update_attribute('person', {
+                    'entityType': 'person',
+                    'entityName': '123'
+                })
+            ]
+        }
+    ]
+
+
 person_entity_def = {'name': 'person', 'type': 'record', 'fields': [
     {'name': 'first_name', 'default': None, 'type': ['null', 'string']},
     {'name': 'last_name', 'default': None, 'type': ['null', 'string']},
@@ -177,6 +209,10 @@ person_entity_def = {'name': 'person', 'type': 'record', 'fields': [
         'null',
         {'type': 'enum', 'name': 'person_eye_color', 'symbols':
             ['black', 'blue', 'brown', 'gray', 'green']}]}]}
+
+pet_entity_def = {'name': 'pet', 'type': 'record', 'fields': [
+    {'name': 'pet_name', 'default': None, 'type': ['null', 'string']}
+]}
 
 
 # These are actual "base64-encoded" enum values from a Gen3 PFB.
