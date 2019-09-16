@@ -23,7 +23,7 @@ pip install --upgrade pip virtualenv
 # Get the source code from the Google Cloud Repository
 # git requires $HOME and it's not set during the startup script.
 export HOME=/root
-git config --global credential.helper gcloud.sh
+#git config --global credential.helper gcloud.sh
 git clone git@github.com:DataBiosphere/arrow.git /opt/app
 git -C /opt/app checkout br-gce-spike
 
