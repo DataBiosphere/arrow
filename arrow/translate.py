@@ -38,9 +38,9 @@ class Translator:
 
         attributes = [make_op(key, value)
                       for key, value in record['object'].items() if value is not None]
-        relations = [make_op(r['dst_name'],
-                             {'entityType': r['dst_name'], 'entityName': r['dst_id']})
-                     for r in record['relations']]
+        relations = [make_op(relation['dst_name'],
+                             {'entityType': relation['dst_name'], 'entityName': relation['dst_id']})
+                     for relation in record['relations']]
 
         return {
             'name': name,
