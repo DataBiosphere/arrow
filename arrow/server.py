@@ -33,7 +33,7 @@ async def avro_to_rawls(request):
 
     avro = urllib.request.urlopen(url)
     reader = fastavro.reader(avro)
-    result = await translate(reader, options)
+    result = translate(reader, options)
     return response.json(result)
 
 

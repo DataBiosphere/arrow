@@ -1,7 +1,7 @@
 import base64
 
 
-async def translate(reader, options=None):
+def translate(reader, options=None):
     if options is None:
         options = {}
     t = Translator(options)
