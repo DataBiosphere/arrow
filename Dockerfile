@@ -15,5 +15,5 @@ RUN apk --no-cache add --virtual build-dependencies python3-dev build-base \
 # TODO: Slim down what gets bundled
 COPY . .
 
-# From experiments deploying to Cloud Run
+# From experiments deploying to GCE
 #CMD [ "gunicorn", "-b", ":8000", "arrow.server:app", "--worker-class", "sanic.worker.GunicornWorker", "--timeout", "120", "--log-level", "warning" ]
