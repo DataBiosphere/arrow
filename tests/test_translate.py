@@ -202,6 +202,25 @@ async def test_make_entity_links():
     ]
 
 
+@pytest.mark.asyncio
+async def test_rename_name_attributes():
+    schema = make_pfb_schema([named_entity_def])
+    file = make_avro_file(schema, [
+        {'name': 'thing', 'id': '1', 'object': {'name': 'Thing 1'}}
+    ])
+
+    result = await translate(fastavro.reader(file))
+    assert result == [
+        {
+            'name': '1',
+            'entityType': 'thing',
+            'operations': [
+                add_update_attribute('thing_name', 'Thing 1')
+            ]
+        }
+    ]
+
+
 person_entity_def = {'name': 'person', 'type': 'record', 'fields': [
     {'name': 'first_name', 'default': None, 'type': ['null', 'string']},
     {'name': 'last_name', 'default': None, 'type': ['null', 'string']},
@@ -212,6 +231,10 @@ person_entity_def = {'name': 'person', 'type': 'record', 'fields': [
 
 pet_entity_def = {'name': 'pet', 'type': 'record', 'fields': [
     {'name': 'pet_name', 'default': None, 'type': ['null', 'string']}
+]}
+
+named_entity_def = {'name': 'thing', 'type': 'record', 'fields': [
+    {'name': 'name', 'type': 'string'}
 ]}
 
 
