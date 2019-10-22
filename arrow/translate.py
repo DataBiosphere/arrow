@@ -34,6 +34,8 @@ class Translator:
                 value = _b64_decode(value).decode("utf-8")
             if self.options['prefix-object-ids'] and key == 'object_id':
                 value = 'drs://' + value
+            if key == 'name':
+                key = entity_type + '_name'
             return _make_add_update_op(key, value)
 
         attributes = [make_op(key, value)
